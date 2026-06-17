@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GAME VAULT — Edición Game Boy</title>
+  <link rel="stylesheet" href="../css/gameboy.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet">
+</head>
+<body class="gameboy-edition">
+
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <header>
+    <div class="logo-block">
+      <div class="blink-cursor">█</div>
+      <h1>GAME VAULT</h1>
+      <div class="blink-cursor">█</div>
+    </div>
+    <p class="tagline">&gt; SISTEMA DE VERIFICACIÓN DE VIDEOJUEGOS v1.0 _</p>
+    <div class="stats-bar">
+      <span id="total-count">REGISTROS: --</span>
+      <span id="verified-count">VERIFICADOS: --</span>
+      <span class="status-online">● ONLINE</span>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="panel panel-form">
+      <div class="panel-title">
+        <span class="panel-icon">▶</span>
+        <span id="form-title">INSERTAR NUEVO REGISTRO</span>
+      </div>
+
+      <input type="hidden" id="idJuego">
+
+      <div class="field-group">
+        <div class="field">
+          <label for="nombre">NOMBRE DEL JUEGO</label>
+          <input type="text" id="nombre" placeholder="Ej: Elden Ring">
+        </div>
+        <div class="field">
+          <label for="consola">PLATAFORMA / CONSOLA</label>
+          <select id="consola">
+            <option value="">-- SELECCIONAR --</option>
+            <option>PlayStation 5</option>
+            <option>PlayStation 4</option>
+            <option>Xbox Series X/S</option>
+            <option>Xbox One</option>
+            <option>Nintendo Switch</option>
+            <option>PC</option>
+            <option>Mobile</option>
+            <option>Multi-plataforma</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field">
+          <label for="genero">GÉNERO</label>
+          <select id="genero">
+            <option value="">-- SELECCIONAR --</option>
+            <option>Acción / Aventura</option>
+            <option>RPG</option>
+            <option>FPS / Shooter</option>
+            <option>Battle Royale</option>
+            <option>Deportes</option>
+            <option>Estrategia</option>
+            <option>Simulación</option>
+            <option>Plataformas</option>
+            <option>Horror / Survival</option>
+            <option>Fighting</option>
+            <option>Sandbox / Open World</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="modalidad">MODALIDAD</label>
+          <select id="modalidad">
+            <option value="">-- SELECCIONAR --</option>
+            <option value="single-player">Single-Player</option>
+            <option value="online">Multiplayer Online</option>
+            <option value="co-op">Co-op Local</option>
+            <option value="co-op">Co-op Online</option>
+            <option value="multi-player">Single + Multiplayer</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field">
+          <label for="desarrollador">DESARROLLADOR / ESTUDIO</label>
+          <input type="text" id="desarrollador" placeholder="Ej: FromSoftware">
+        </div>
+        <div class="field">
+          <label for="anio">AÑO DE LANZAMIENTO</label>
+          <input type="number" id="anio" placeholder="Ej: 2022" min="2020" max="2030">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field">
+          <label for="puntuacion">PUNTUACIÓN (1–10)</label>
+          <input type="number" id="puntuacion" placeholder="Ej: 9.5" min="1" max="10" step="0.1">
+        </div>
+        <div class="field field-check">
+          <label for="verificado">ESTADO</label>
+          <div class="toggle-wrap">
+            <label class="toggle">
+              <input type="checkbox" id="verificado">
+              <span class="toggle-slider"></span>
+            </label>
+            <span id="toggle-label">NO VERIFICADO</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button id="btnGuardar" type="button">▶ EJECUTAR</button>
+        <button id="btnCancelar" type="button" style="display:none">✕ CANCELAR</button>
+      </div>
+
+      <div id="msg" class="msg-line"></div>
+    </section>
+
+    <section class="panel panel-list">
+      <div class="panel-title">
+        <span class="panel-icon">▶</span>
+        REGISTROS EN BASE DE DATOS
+        <div class="filter-wrap">
+          <input type="text" id="filtro" placeholder="BUSCAR..." oninput="lista.filtrar(this.value)">
+        </div>
+      </div>
+      <div id="listado"><p class="loading-txt">█ CARGANDO BASE DE DATOS...</p></div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>GAME VAULT © 2025</span>
+    <span>EDICIÓN GAME BOY</span>
+    <nav class="edition-nav" aria-label="Comparar versiones">
+      <a href="original.html">ORIGINAL</a>
+      <a href="gameboy.html" class="is-active">GAME BOY</a>
+      <a href="pokemon.html">POKÉMON</a>
+      <a href="cyberpunk.html">CYBERPUNK</a>
+      <a href="../index.html">CYBERPUNK 2077</a>
+    </nav>
+  </footer>
+
+  <script src="../js/catalogo.js"></script>
+  <script src="../js/gameboy.js"></script>
+</body>
+</html>

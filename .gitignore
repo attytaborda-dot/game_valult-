@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+__MACOSX/
+
+# Cursor / VS Code
+.vscode/
+.cursor/
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.bak
+
+# Variables de entorno / claves privadas
+.env
+.env.local

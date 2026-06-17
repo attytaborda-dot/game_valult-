@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GAME VAULT — Cyberpunk 2077 Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/vault.css">
+</head>
+<body class="vault-edition cyberpunk-edition">
+
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="glow-orb glow-orb--cyan" aria-hidden="true"></div>
+  <div class="glow-orb glow-orb--magenta" aria-hidden="true"></div>
+  <div class="electric-flash" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <h1 class="glitch-title site-title" data-text="GAME VAULT">GAME VAULT</h1>
+    <p class="site-tagline">&gt; SISTEMA DE VERIFICACIÓN Y RANKING v3.0_</p>
+    <div class="stats-bar">
+      <span id="total-count">Registros: --</span>
+      <span id="verified-count">Verificados: --</span>
+      <span class="status-online">● En línea</span>
+    </div>
+  </header>
+
+  <main class="layout-main">
+
+    <section class="panel panel-form">
+      <h2 class="panel-title" id="form-title">Insertar nuevo registro</h2>
+      <input type="hidden" id="idJuego">
+
+      <div class="field-row">
+        <div class="field">
+          <label for="nombre">Nombre del juego</label>
+          <input type="text" id="nombre" placeholder="Ej: Elden Ring">
+        </div>
+        <div class="field">
+          <label for="consola">Plataforma</label>
+          <select id="consola">
+            <option value="">— Seleccionar —</option>
+            <option>PlayStation 5</option>
+            <option>PlayStation 4</option>
+            <option>Xbox Series X/S</option>
+            <option>Xbox One</option>
+            <option>Nintendo Switch</option>
+            <option>PC</option>
+            <option>Mobile</option>
+            <option>Multi-plataforma</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="genero">Género</label>
+          <select id="genero">
+            <option value="">— Seleccionar —</option>
+            <option>Acción / Aventura</option>
+            <option>RPG</option>
+            <option>FPS / Shooter</option>
+            <option>Battle Royale</option>
+            <option>Deportes</option>
+            <option>Estrategia</option>
+            <option>Simulación</option>
+            <option>Plataformas</option>
+            <option>Horror / Survival</option>
+            <option>Fighting</option>
+            <option>Sandbox / Open World</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="modalidad">Modalidad</label>
+          <select id="modalidad">
+            <option value="">— Seleccionar —</option>
+            <option value="single-player">Single-Player</option>
+            <option value="online">Multiplayer Online</option>
+            <option value="co-op">Co-op Local</option>
+            <option value="co-op">Co-op Online</option>
+            <option value="multi-player">Single + Multiplayer</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="desarrollador">Desarrollador</label>
+          <input type="text" id="desarrollador" placeholder="Ej: FromSoftware">
+        </div>
+        <div class="field">
+          <label for="anio">Año de lanzamiento</label>
+          <input type="number" id="anio" placeholder="2024" min="1980" max="2030">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="puntuacion">Puntuación (1–10)</label>
+          <input type="number" id="puntuacion" placeholder="9.5" min="1" max="10" step="0.1">
+        </div>
+        <div class="field">
+          <label for="horas">Horas promedio (completar)</label>
+          <input type="number" id="horas" placeholder="40" min="1" max="500" step="1">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field field-check">
+          <label for="verificado">Estado</label>
+          <div class="toggle-wrap">
+            <label class="toggle">
+              <input type="checkbox" id="verificado">
+              <span class="toggle-slider"></span>
+            </label>
+            <span id="toggle-label">No verificado</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="portada">URL carátula</label>
+          <input type="url" id="portada" placeholder="https://...imagen.jpg">
+        </div>
+        <div class="field">
+          <label for="enlace_compra">Enlace de compra</label>
+          <input type="url" id="enlace_compra" placeholder="https://tienda...">
+        </div>
+      </div>
+
+      <div id="portada-preview-wrap" class="portada-preview-wrap" hidden>
+        <span class="preview-label">Vista previa</span>
+        <img id="portada-preview" class="portada-preview" alt="Vista previa carátula">
+      </div>
+      <p class="field-hint">Carátula, enlace y horas se guardan en tu navegador hasta existir en Supabase.</p>
+
+      <div class="btn-row">
+        <button type="button" id="btnGuardar" class="btn btn-primary btn-grow">Ejecutar</button>
+        <button type="button" id="btnCancelar" class="btn btn-secondary btn-grow" style="display:none">Cancelar</button>
+      </div>
+      <div id="msg" class="msg-line"></div>
+    </section>
+
+    <div class="layout-ranking">
+
+      <section class="panel panel-list">
+        <div class="panel-head">
+          <h2 class="panel-title">Ranking por puntuación</h2>
+          <input type="search" id="filtro" class="search-input" placeholder="Buscar juego..."
+            oninput="lista.filtrar(this.value)">
+        </div>
+        <p class="list-hint">Cada ficha muestra datos básicos y horas promedio. Clic para sinopsis y opiniones.</p>
+        <div id="listado" class="card-list"><p class="loading-txt">Cargando catálogo...</p></div>
+      </section>
+
+      <div id="detalle-backdrop" class="detalle-backdrop" hidden aria-hidden="true"></div>
+
+      <aside id="detalle-panel" class="panel panel-detalle" aria-live="polite">
+        <div class="panel-detalle-head">
+          <h2 class="panel-title">Ficha del juego</h2>
+          <button type="button" id="detalle-cerrar" class="btn-detalle-cerrar" hidden aria-label="Cerrar ficha">✕</button>
+        </div>
+        <div id="detalle-contenido" class="detalle-contenido">
+          <p class="detalle-placeholder">Selecciona un juego del ranking para ver carátula, sinopsis y opiniones de la comunidad.</p>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span>GAME VAULT © 2025</span>
+    <nav class="edition-nav" aria-label="Otras ediciones visuales">
+      <a href="editions/original.html">Original</a>
+      <a href="editions/gameboy.html">Game Boy</a>
+      <a href="editions/pokemon.html">Pokémon</a>
+      <a href="editions/cyberpunk.html">Cyberpunk</a>
+      <a href="index.html" class="is-active">CYBERPUNK 2077</a>
+    </nav>
+  </footer>
+
+  <script src="js/catalogo.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
