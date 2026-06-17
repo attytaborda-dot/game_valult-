@@ -35,11 +35,14 @@ Abre **`app/index.html`** en el navegador — edición principal **Cyberpunk 207
 
 | Viewport | Comportamiento |
 |---|---|
-| **≥ 1100px** | Galería y ficha en dos columnas a **igual altura**; scroll independiente en cada panel |
-| **521–1099px** | Ficha como **panel deslizante** (overlay inferior); sin scroll al final de la página |
-| **≤ 520px** | Mobile-first: fichas apiladas, carátulas centradas, formulario y buscador a ancho completo |
+| **≤ 520px** | Fichas **apiladas** (carátula arriba, datos, botones abajo); formulario y buscador a ancho completo |
+| **521–899px** | Ficha en fila con acciones al pie; drawer de detalle al seleccionar |
+| **≥ 900px** | Ficha horizontal estilo desktop (portada + datos + acciones) |
+| **≥ 1100px** | Galería y panel detalle en dos columnas a igual altura |
 
 Ver criterios completos en [spec.md § Mobile-first](./spec.md#8-mobile-first-dispositivos-móviles).
+
+> Tras actualizar estilos, recarga forzada (**Cmd+Shift+R**) para cargar `vault.css?v=4`.
 
 ## Música de fondo
 

@@ -21,9 +21,11 @@ Enfoque **mobile-first**: los estilos base en `vault.css` apuntan a una sola col
 
 | Viewport | Comportamiento |
 |---|---|
-| **≥ 1100px** | `.layout-ranking` en 2 columnas iguales; `.panel-list` y `.panel-detalle` misma altura (`calc(100vh - 14rem)`); scroll interno en cada panel |
-| **521–1099px** | Una columna; ficha en drawer fijo inferior al seleccionar; `body.detalle-abierto` bloquea scroll de fondo |
-| **≤ 520px** | Fichas apiladas; carátulas 16:9 centradas; formulario y buscador a ancho completo; safe area (`env(safe-area-inset-*)`) |
+| **≤ 520px** | Fichas apiladas; carátula 16:9 ancho completo; botones Editar/Borrar bajo los datos (no en columna lateral) |
+| **521–899px** | Fila con wrap: portada + datos, acciones en fila inferior |
+| **≥ 900px** | Fila única desktop con acciones laterales |
+| **≥ 1100px** | `.layout-ranking` en 2 columnas iguales; scroll interno en cada panel |
+| **≤ 1099px** | Drawer de ficha al seleccionar; `body.detalle-abierto` bloquea scroll de fondo |
 
 ### Formulario y navegación móvil
 
@@ -49,8 +51,14 @@ Enfoque **mobile-first**: los estilos base en `vault.css` apuntan a una sola col
 
 ### Fichas del listado (`.card`)
 
-- Flex horizontal: carátula 240×135px (16:9) + datos + acciones.
-- **Sin** `transform: scale` (evita solapamiento).
+Enfoque **mobile-first** en `vault.css`:
+
+| Base (sin media query) | `flex-direction: column`; carátula `aspect-ratio: 16/9`; acciones en fila inferior |
+| **≤ 520px** | Datos centrados; botones a ancho completo |
+| **≥ 521px** | Fila con wrap; portada 200×112px |
+| **≥ 900px** | Fila única; portada 240×135px; acciones en columna lateral |
+
+- **Sin** `transform: scale` en hover (evita solapamiento).
 - Brillo neón en borde + `filter: brightness` en imagen.
 
 ### Panel detalle

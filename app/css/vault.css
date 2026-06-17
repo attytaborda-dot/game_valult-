@@ -22,7 +22,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; background: var(--void); }
+html { scroll-behavior: smooth; background: var(--void); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 body.vault-edition.cyberpunk-edition {
   font-family: var(--font-body);
@@ -480,37 +480,38 @@ body.vault-edition.cyberpunk-edition {
 
 .search-input { max-width: 220px; min-width: 140px; }
 
-/* ── CARDS — fila única: portada + datos + acciones ── */
+/* ── CARDS — mobile-first: columna en base, fila en tablet/desktop ── */
 .card-list {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
   max-height: none;
   overflow: visible;
-  padding-right: 4px;
+  padding-right: 0;
 }
 
-@media (min-height: 700px) {
+@media (min-height: 700px) and (min-width: 900px) {
   .panel-list .card-list {
     max-height: 75vh;
     overflow-y: auto;
+    padding-right: 4px;
   }
 }
 
 .card {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 1.5rem;
-  padding: 1.35rem;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  padding: 1.1rem;
   background: var(--panel);
   border: 1px solid var(--border);
   cursor: pointer;
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   isolation: isolate;
   transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Hover: brillo eléctrico SIN escalar — evita solapamiento */
@@ -535,12 +536,14 @@ body.vault-edition.cyberpunk-edition {
 
 .card-cover {
   position: relative;
-  flex: 0 0 240px;
+  flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 240px;
-  height: 135px;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
   padding: 8px;
   border: 2px solid var(--border-lit);
   overflow: hidden;
@@ -596,19 +599,21 @@ body.vault-edition.cyberpunk-edition {
   justify-content: center;
   gap: 0.5rem;
   padding: 0;
+  width: 100%;
 }
 
 .card-name {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 4.5vw, 1.25rem);
   font-weight: 700;
   color: var(--text);
   line-height: 1.35;
   margin: 0;
+  word-break: break-word;
 }
 
 .card-dev {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-soft);
   margin: 0;
@@ -622,13 +627,13 @@ body.vault-edition.cyberpunk-edition {
 }
 
 .card-tags span {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   padding: 0.3rem 0.55rem;
   background: var(--void);
   border: 1px solid var(--border);
   color: var(--text-soft);
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .card-tags .tag-consola { color: var(--neon-cyan); border-color: rgba(0,229,255,.35); }
@@ -639,7 +644,7 @@ body.vault-edition.cyberpunk-edition {
 .card-tags .tag-pend   { color: var(--text-dim); }
 
 .card-meta {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--text-dim);
   margin: 0;
@@ -647,57 +652,131 @@ body.vault-edition.cyberpunk-edition {
 
 .card-actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  flex: 0 0 auto;
-  align-self: center;
+  width: 100%;
+  flex: none;
   position: relative;
   z-index: 2;
 }
 
-@media (max-width: 900px) {
+.card-actions .btn-edit,
+.card-actions .btn-del {
+  flex: 1 1 calc(50% - 0.25rem);
+  min-height: 44px;
+}
+
+/* Smartphone estrecho — carátula y datos centrados */
+@media (max-width: 520px) {
   .card {
+    align-items: center;
+  }
+
+  .card-body {
+    text-align: center;
+    align-items: center;
+  }
+
+  .card-tags {
+    justify-content: center;
+  }
+
+  .card-actions {
+    justify-content: center;
+  }
+
+  .card-actions .btn-edit,
+  .card-actions .btn-del {
+    flex: 1 1 100%;
+    max-width: 16rem;
+  }
+}
+
+/* Tablet — fila con acciones en fila inferior */
+@media (min-width: 521px) {
+  .card {
+    flex-direction: row;
     flex-wrap: wrap;
+    align-items: flex-start;
     gap: 1rem 1.25rem;
     padding: 1.15rem;
   }
+
   .card-cover {
     flex: 0 0 200px;
     width: 200px;
+    max-width: none;
+    aspect-ratio: auto;
     height: 112px;
-    padding: 6px;
   }
+
   .card-body {
-    flex: 1 1 180px;
+    flex: 1 1 12rem;
+    text-align: left;
+    align-items: flex-start;
   }
+
+  .card-tags span {
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
   .card-actions {
     flex: 1 1 100%;
     flex-direction: row;
     justify-content: flex-end;
+    width: 100%;
+  }
+
+  .card-actions .btn-edit,
+  .card-actions .btn-del {
+    flex: 0 1 auto;
+    min-width: 6.5rem;
   }
 }
 
-@media (max-width: 520px) {
+/* Desktop — fila única con acciones laterales */
+@media (min-width: 900px) {
   .card {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: nowrap;
     align-items: center;
-    padding: 1.1rem;
+    gap: 1.5rem;
+    padding: 1.35rem;
+    overflow: visible;
   }
+
   .card-cover {
-    width: 100%;
-    max-width: 280px;
-    height: 158px;
-    flex: 0 0 auto;
-    padding: 8px;
+    flex: 0 0 240px;
+    width: 240px;
+    height: 135px;
   }
+
   .card-body {
-    width: 100%;
-    text-align: center;
-    align-items: center;
+    flex: 1 1 auto;
   }
+
+  .card-name {
+    font-size: 1.25rem;
+  }
+
+  .card-dev {
+    font-size: 1.05rem;
+  }
+
   .card-actions {
-    width: 100%;
-    justify-content: center;
+    flex: 0 0 auto;
+    flex-direction: column;
+    width: auto;
+    align-self: center;
+  }
+
+  .card-actions .btn-edit,
+  .card-actions .btn-del {
+    flex: none;
+    min-height: auto;
+    min-width: 0;
   }
 }
 
@@ -1226,6 +1305,10 @@ body.splash-active {
 
   .card {
     -webkit-tap-highlight-color: transparent;
+  }
+
+  .panel {
+    padding: 1rem 0.9rem;
   }
 }
 

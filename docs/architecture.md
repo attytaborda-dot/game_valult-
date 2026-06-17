@@ -50,7 +50,9 @@ Datos (Supabase REST + localStorage)
 
 | Breakpoint | Componentes |
 |---|---|
-| **≤ 520px** | Fichas en columna; carátula 16:9 centrada |
+| **≤ 520px** | Fichas en columna; carátula 16:9 ancho completo |
+| **521–899px** | Fichas en fila con wrap |
+| **≥ 900px** | Fichas en fila única (desktop) |
 | **521–1099px** | Ficha en **drawer inferior** (`#detalle-panel.detalle-overlay-open`) + backdrop |
 | **≥ 1100px** | Grid 50/50: `.panel-list` y `.panel-detalle` a **igual altura** con scroll interno |
 

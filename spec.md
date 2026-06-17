@@ -76,17 +76,29 @@ La edición principal (`app/index.html`) debe ser usable desde **320px** de anch
 
 | Viewport | Comportamiento |
 |---|---|
-| **≤ 520px** | Fichas del ranking apiladas; carátulas 16:9 centradas; buscador a ancho completo; safe area en notch |
-| **521–1099px** | Listado + drawer de ficha al seleccionar juego |
-| **≥ 1100px** | Dos columnas a igual altura con scroll interno |
+| **≤ 520px** | Fichas **apiladas** (carátula 16:9 arriba, datos, botones Editar/Borrar en fila inferior a ancho completo); buscador a ancho completo; safe area en notch |
+| **521–899px** | Ficha en fila con wrap: portada + datos arriba, acciones en fila inferior |
+| **900–1099px** | Igual que tablet + drawer de ficha al seleccionar juego |
+| **≥ 1100px** | Dos columnas a igual altura; fichas en fila única (portada + datos + acciones laterales) |
+
+### Fichas del ranking (protocolo responsive)
+
+| Viewport | Layout `.card` |
+|---|---|
+| Base (móvil) | `flex-direction: column` — carátula ancho 100%, aspect-ratio 16:9 |
+| ≤ 520px | Contenido centrado; botones Editar/Borrar apilados o a ancho completo |
+| ≥ 521px | Fila con wrap; acciones al pie de la ficha |
+| ≥ 900px | Fila única desktop; acciones en columna a la derecha |
 
 ### Criterios de aceptación móvil
 
 - [x] Sin desbordamiento horizontal (`overflow-x: hidden` en body).
 - [x] Formulario CRUD usable con campos apilados en pantallas estrechas.
 - [x] Ranking legible: nombre, tags y horas visibles sin ampliar.
+- [x] Botones Editar/Borrar **no** comprimen la ficha en columna lateral en móvil.
 - [x] Detalle accesible con cierre por botón, backdrop o tecla Escape.
 - [x] Animaciones reducidas si el usuario tiene `prefers-reduced-motion`.
+- [x] CSS con cache bust (`vault.css?v=N`) tras cambios de layout.
 
 Especificación detallada de interfaz: [interfaz-temasSpec.md](./docs/modules/interfaz-temas/interfaz-temasSpec.md).
 

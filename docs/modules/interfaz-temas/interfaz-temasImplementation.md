@@ -6,9 +6,10 @@
 
 ## Enfoque mobile-first
 
-1. **Base sin media query**: una columna (`.layout-ranking { grid-template-columns: 1fr }`), fichas en fila horizontal con wrap progresivo.
-2. **`min-width` para ampliar**: desktop a partir de `1100px`.
-3. **`max-width` para refinar móvil/tablet**: ajustes táctiles y apilado.
+1. **Base sin media query**: fichas del ranking en **columna** (carátula arriba, datos, botones abajo).
+2. **`min-width: 521px`**: fila con wrap (tablet).
+3. **`min-width: 900px`**: fila única desktop.
+4. **`min-width: 1100px`**: grid de dos columnas ranking + detalle.
 
 ## Breakpoints
 
@@ -64,9 +65,9 @@ Cierre: botón `#detalle-cerrar`, clic en `#detalle-backdrop`, tecla Escape (`ap
 
 | Contexto | Viewport | Comportamiento |
 |---|---|---|
-| Listado `.card-cover` | Desktop | 240×135px (16:9) |
-| Listado `.card-cover` | ≤ 900px | 200×112px |
-| Listado `.card-cover` | ≤ 520px | Ancho 100%, max 280px, centrado |
+| Listado `.card-cover` | Base (móvil) | Ancho 100%, `aspect-ratio: 16/9` |
+| Listado `.card-cover` | ≥ 521px | 200×112px |
+| Listado `.card-cover` | ≥ 900px | 240×135px (16:9) |
 | Detalle `.detalle-cover` | ≤ 520px | Ancho completo, max-height 420px |
 | Detalle `.detalle-cover` | ≥ 1100px | max-height 260px |
 
@@ -79,6 +80,8 @@ Cierre: botón `#detalle-cerrar`, clic en `#detalle-backdrop`, tecla Escape (`ap
 | Formulario una columna | `.field-row` @ 520px |
 | Buscador ancho completo | `.search-input` @ 520px |
 | Targets táctiles 44px | `.btn`, `.btn-edit`, `.btn-del` @ 1099px |
+| Fichas apiladas en móvil | `.card { flex-direction: column }` base; desktop `@media (min-width: 900px)` |
+| Cache bust CSS | `vault.css?v=4` en `index.html` |
 | Menos movimiento | `@media (prefers-reduced-motion: reduce)` |
 
 ## HTML
