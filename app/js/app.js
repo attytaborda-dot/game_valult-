@@ -81,7 +81,7 @@ class ListaJuegos {
     setVal('desarrollador', j.desarrollador);
     setVal('anio', j.anio);
     setVal('puntuacion', j.puntuacion);
-    setVal('portada', j.portada || catalogoDe(j).portada || '');
+    setVal('portada', mediaLocalDe(j.id)?.portada || catalogoDe(j).portada || '');
     setVal('enlace_compra', j.enlace_compra || catalogoDe(j).enlace_compra || '');
     setVal('horas', horasPromedioDe(j) ?? '');
     actualizarVistaPrevia();
@@ -278,28 +278,110 @@ class ListaJuegos {
   }
 }
 
+function esUrlValida(valor) {
+  if (!valor) return true;
+  try {
+    const u = new URL(valor);
+    return u.protocol === 'http:' || u.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+function marcarCampo(id, invalido) {
+  document.getElementById(id)?.classList.toggle('is-invalid', invalido);
+}
+
+function limpiarMarcasInvalidas() {
+  document.querySelectorAll('.panel-form .is-invalid').forEach((el) => el.classList.remove('is-invalid'));
+}
+
 function leerFormulario() {
+  limpiarMarcasInvalidas();
+
   const nombre = getVal('nombre');
   const consola = getVal('consola');
   const genero = getVal('genero');
   const modalidad = getVal('modalidad');
   const desarrollador = getVal('desarrollador');
-  const anio = parseInt(getVal('anio'));
-  const puntuacion = parseFloat(getVal('puntuacion'));
-  const verificado = document.getElementById('verificado').checked;
+  const anioRaw = getVal('anio');
+  const puntuacionRaw = getVal('puntuacion');
   const horasRaw = getVal('horas');
-  const horas_promedio = horasRaw ? parseInt(horasRaw, 10) : null;
+  const portada = getVal('portada');
+  const enlace_compra = getVal('enlace_compra');
+  const verificado = document.getElementById('verificado').checked;
 
-  if (!nombre || !consola || !genero || !modalidad || !desarrollador || !anio) {
-    msg('Completa todos los campos obligatorios', 'error');
+  if (!nombre) {
+    marcarCampo('nombre', true);
+    msg('El nombre del juego es obligatorio', 'error');
     return null;
   }
+  if (!consola) {
+    marcarCampo('consola', true);
+    msg('Selecciona una plataforma', 'error');
+    return null;
+  }
+  if (!genero) {
+    marcarCampo('genero', true);
+    msg('Selecciona un género', 'error');
+    return null;
+  }
+  if (!modalidad) {
+    marcarCampo('modalidad', true);
+    msg('Selecciona una modalidad', 'error');
+    return null;
+  }
+  if (!desarrollador) {
+    marcarCampo('desarrollador', true);
+    msg('El desarrollador es obligatorio', 'error');
+    return null;
+  }
+
+  const anio = parseInt(anioRaw, 10);
+  if (!anioRaw || !Number.isInteger(anio) || anio < 1980 || anio > 2030) {
+    marcarCampo('anio', true);
+    msg('El año debe ser un número entero entre 1980 y 2030', 'error');
+    return null;
+  }
+
+  let puntuacion = null;
+  if (puntuacionRaw) {
+    puntuacion = parseFloat(puntuacionRaw);
+    if (!Number.isFinite(puntuacion) || puntuacion < 1 || puntuacion > 10) {
+      marcarCampo('puntuacion', true);
+      msg('La puntuación debe estar entre 1 y 10', 'error');
+      return null;
+    }
+  }
+
+  let horas_promedio = null;
+  if (horasRaw) {
+    const horas = parseInt(horasRaw, 10);
+    if (!Number.isInteger(horas) || horas < 1 || horas > 500) {
+      marcarCampo('horas', true);
+      msg('Las horas deben ser un entero entre 1 y 500', 'error');
+      return null;
+    }
+    horas_promedio = horas;
+  }
+
+  if (!esUrlValida(portada)) {
+    marcarCampo('portada', true);
+    msg('La URL de carátula no es válida (usa http:// o https://)', 'error');
+    return null;
+  }
+  if (!esUrlValida(enlace_compra)) {
+    marcarCampo('enlace_compra', true);
+    msg('El enlace de compra no es válido (usa http:// o https://)', 'error');
+    return null;
+  }
+
   return {
     nombre, consola, genero, modalidad, desarrollador,
     'año_lanzamiento': anio, puntuacion, verificado,
-    portada: getVal('portada'),
-    enlace_compra: getVal('enlace_compra'),
-    horas_promedio: Number.isFinite(horas_promedio) ? horas_promedio : null,
+    portada: portada || null,
+    enlace_compra: enlace_compra || null,
+    horas_promedio,
   };
 }
 
@@ -318,6 +400,7 @@ function getVal(id) { return document.getElementById(id).value.trim(); }
 function setVal(id, v) { document.getElementById(id).value = v; }
 
 function limpiar() {
+  limpiarMarcasInvalidas();
   ['nombre','consola','genero','modalidad','desarrollador','anio','puntuacion','horas','portada','enlace_compra','idJuego']
     .forEach(id => setVal(id, ''));
   document.getElementById('verificado').checked = false;

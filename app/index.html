@@ -2,14 +2,24 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>GAME VAULT — Cyberpunk 2077 Edition</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/vault.css">
 </head>
-<body class="vault-edition cyberpunk-edition">
+<body class="vault-edition cyberpunk-edition splash-active">
+
+  <div id="splash-screen" class="splash-screen" role="dialog" aria-modal="true" aria-labelledby="splash-title">
+    <div class="splash-scanlines" aria-hidden="true"></div>
+    <div class="splash-inner">
+      <p class="splash-kicker">&gt; SYSTEM BOOT SEQUENCE_</p>
+      <h2 id="splash-title" class="splash-title glitch-title" data-text="GAME VAULT">GAME VAULT</h2>
+      <p class="splash-tagline">Verificación · Ranking · Catálogo</p>
+      <button type="button" id="splash-enter" class="splash-enter-btn" autofocus>ENTER GAME VAULT</button>
+    </div>
+  </div>
 
   <div class="grid-bg" aria-hidden="true"></div>
   <div class="glow-orb glow-orb--cyan" aria-hidden="true"></div>
@@ -173,6 +183,10 @@
 
   <footer class="site-footer">
     <span>GAME VAULT © 2025</span>
+    <p class="audio-credit">
+      <a href="https://freesound.org/s/592086/" target="_blank" rel="noopener noreferrer">"Horizon of the Unknown"</a>
+      by SoundFlakes – freesound.org/s/592086/ – License: CC BY 4.0
+    </p>
     <nav class="edition-nav" aria-label="Otras ediciones visuales">
       <a href="editions/original.html">Original</a>
       <a href="editions/gameboy.html">Game Boy</a>
@@ -182,7 +196,73 @@
     </nav>
   </footer>
 
-  <script src="js/catalogo.js"></script>
+  <audio id="bg-music" loop preload="auto" aria-hidden="true">
+    <source src="audio/Soundflakes - Horizon of the Unknown.mp3" type="audio/mpeg">
+  </audio>
+
+  <button type="button" id="music-toggle" class="music-toggle" hidden aria-pressed="false" aria-label="Activar música de fondo" title="Música de fondo">🔇</button>
+
+  <script src="js/catalogo.js?v=3"></script>
   <script src="js/app.js"></script>
+  <script>
+    (function initVaultEntry() {
+      const audio = document.getElementById('bg-music');
+      const musicBtn = document.getElementById('music-toggle');
+      const splash = document.getElementById('splash-screen');
+      const enterBtn = document.getElementById('splash-enter');
+      if (!audio || !musicBtn || !splash || !enterBtn) return;
+
+      audio.volume = 0.45;
+
+      function syncMusicBtn() {
+        const playing = !audio.paused;
+        musicBtn.textContent = playing ? '🔊' : '🔇';
+        musicBtn.classList.toggle('is-playing', playing);
+        musicBtn.setAttribute('aria-pressed', playing ? 'true' : 'false');
+        musicBtn.setAttribute('aria-label', playing ? 'Silenciar música de fondo' : 'Activar música de fondo');
+      }
+
+      async function playMusic() {
+        try {
+          await audio.play();
+          syncMusicBtn();
+        } catch (err) {
+          console.warn('No se pudo reproducir la música de fondo:', err);
+        }
+      }
+
+      function dismissSplash() {
+        splash.classList.add('splash-screen--out');
+        document.body.classList.remove('splash-active');
+        splash.setAttribute('aria-hidden', 'true');
+        musicBtn.hidden = false;
+        window.setTimeout(() => splash.remove(), 650);
+      }
+
+      enterBtn.addEventListener('click', async () => {
+        dismissSplash();
+        await playMusic();
+      });
+
+      enterBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          enterBtn.click();
+        }
+      });
+
+      musicBtn.addEventListener('click', () => {
+        if (audio.paused) playMusic();
+        else {
+          audio.pause();
+          syncMusicBtn();
+        }
+      });
+
+      audio.addEventListener('play', syncMusicBtn);
+      audio.addEventListener('pause', syncMusicBtn);
+      syncMusicBtn();
+    })();
+  </script>
 </body>
 </html>

@@ -4,16 +4,22 @@
 
 `app/css/vault.css` — todos los estilos de `app/index.html`.
 
+## Enfoque mobile-first
+
+1. **Base sin media query**: una columna (`.layout-ranking { grid-template-columns: 1fr }`), fichas en fila horizontal con wrap progresivo.
+2. **`min-width` para ampliar**: desktop a partir de `1100px`.
+3. **`max-width` para refinar móvil/tablet**: ajustes táctiles y apilado.
+
 ## Breakpoints
 
 ```css
-/* Móvil estrecho */
+/* Móvil estrecho — apilado total */
 @media (max-width: 520px) { … }
 
-/* Tablet / ventana media */
+/* Tablet — fichas con wrap */
 @media (max-width: 900px) { … }
 
-/* Overlay drawer (vista apilada) */
+/* Vista apilada — drawer de ficha */
 @media (max-width: 1099px) { … }
 
 /* Desktop dos columnas */
@@ -37,7 +43,7 @@
 }
 ```
 
-## Overlay drawer
+## Overlay drawer (tablet/móvil)
 
 ```css
 .panel-detalle {
@@ -52,13 +58,52 @@
 
 Activado por `ListaJuegos.actualizarVistaDetalle()` cuando `matchMedia('(max-width: 1099px)')`.
 
+Cierre: botón `#detalle-cerrar`, clic en `#detalle-backdrop`, tecla Escape (`app.js`).
+
 ## Carátulas
 
-| Contexto | Tamaño | Ratio |
+| Contexto | Viewport | Comportamiento |
 |---|---|---|
-| Listado `.card-cover` | 240×135px | 16:9 |
-| Detalle `.detalle-cover-wrap` | 200px ancho, max-height 96px | contain |
+| Listado `.card-cover` | Desktop | 240×135px (16:9) |
+| Listado `.card-cover` | ≤ 900px | 200×112px |
+| Listado `.card-cover` | ≤ 520px | Ancho 100%, max 280px, centrado |
+| Detalle `.detalle-cover` | ≤ 520px | Ancho completo, max-height 420px |
+| Detalle `.detalle-cover` | ≥ 1100px | max-height 260px |
+
+## Mobile-first — reglas CSS aplicadas
+
+| Regla | Selector / archivo |
+|---|---|
+| Sin scroll horizontal | `body { overflow-x: hidden }` |
+| Safe area (notch) | `env(safe-area-inset-*)` en body y drawer |
+| Formulario una columna | `.field-row` @ 520px |
+| Buscador ancho completo | `.search-input` @ 520px |
+| Targets táctiles 44px | `.btn`, `.btn-edit`, `.btn-del` @ 1099px |
+| Menos movimiento | `@media (prefers-reduced-motion: reduce)` |
+
+## HTML
+
+`app/index.html` incluye:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+```
+
+## Splash screen + audio
+
+Flujo de entrada (`index.html`, script inline antes de `</body>`):
+
+1. `body.splash-active` bloquea scroll.
+2. `#splash-screen` (z-index 9999) con `#splash-enter`.
+3. Clic en **ENTER GAME VAULT** → clase `splash-screen--out`, quita `splash-active`, elimina splash, `audio.play()`, muestra `#music-toggle`.
+4. `#music-toggle` alterna play/pause; iconos 🔊 / 🔇.
+
+```css
+.splash-screen { position: fixed; inset: 0; z-index: 9999; }
+.splash-enter-btn { /* Cyberpunk amarillo / Orbitron */ }
+.music-toggle { position: fixed; bottom/right; z-index: 220; }
+```
 
 ## Ediciones legacy
 
-Cada edición usa su CSS en `app/css/` (`original.css`, etc.) y JS dedicado en `app/js/` sin overlay ni ficha detalle.
+Cada edición usa su CSS en `app/css/` (`original.css`, etc.) y JS dedicado en `app/js/` sin overlay ni ficha detalle. Incluyen meta viewport estándar; el layout CRUD pasa a una columna en ≤ 900px (`original.css`).

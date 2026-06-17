@@ -1,8 +1,24 @@
 /**
  * Catálogo GAME VAULT — portadas, tiendas, sinopsis y comunidad.
- * Prioridad media: Supabase > localStorage > catálogo > fallback.
+ * Prioridad portada: catálogo > localStorage (override manual) > fallback.
  */
 const MEDIA_LS_KEY = 'gamevault_media';
+const CATALOGO_PORTADAS_REVISION = 2;
+const MEDIA_REVISION_KEY = 'gamevault_media_revision';
+
+/** Al actualizar portadas en el catálogo, sube la revisión y limpia URLs antiguas en localStorage. */
+(function migrarPortadasCatalogo() {
+  try {
+    if (Number(localStorage.getItem(MEDIA_REVISION_KEY) || 0) >= CATALOGO_PORTADAS_REVISION) return;
+    const all = JSON.parse(localStorage.getItem(MEDIA_LS_KEY) || '{}');
+    for (const id of Object.keys(all)) {
+      delete all[id].portada;
+      if (!all[id]?.enlace_compra && all[id]?.horas_promedio == null) delete all[id];
+    }
+    localStorage.setItem(MEDIA_LS_KEY, JSON.stringify(all));
+    localStorage.setItem(MEDIA_REVISION_KEY, String(CATALOGO_PORTADAS_REVISION));
+  } catch { /* ignore */ }
+})();
 
 const CATALOGO_JUEGOS = {
   'animal crossing: new horizons': {
@@ -136,7 +152,7 @@ const CATALOGO_JUEGOS = {
     ],
   },
   "marvel's spider-man 2": {
-    ortada: 'https://mcdn.wallpapersafari.com/medium/64/85/9uBS4g.jpg',
+    portada: 'https://mcdn.wallpapersafari.com/medium/64/85/9uBS4g.jpg',
     enlace_compra: 'https://store.playstation.com/en-us/concept/10002456',
     sinopsis: 'Peter Parker y Miles Morales protegen Nueva York del simbionte Venom y nuevas amenazas en un blockbuster de acción con dos héroes intercambiables.',
     comentarios: [
@@ -284,15 +300,16 @@ function guardarMediaLocal(id, datos) {
 
 function aplicarMediaLocal(juego) {
   const m = mediaLocalDe(juego.id);
-  if (m?.portada) juego.portada = m.portada;
   if (m?.enlace_compra) juego.enlace_compra = m.enlace_compra;
   if (m?.horas_promedio != null) juego.horas_promedio = m.horas_promedio;
   return juego;
 }
 
 function portadaDe(juego) {
-  if (juego.portada) return juego.portada;
-  if (catalogoDe(juego).portada) return catalogoDe(juego).portada;
+  const catalog = catalogoDe(juego).portada;
+  const custom = mediaLocalDe(juego.id)?.portada;
+  if (catalog) return catalog;
+  if (custom) return custom;
   return portadaPlaceholder(juego.nombre);
 }
 

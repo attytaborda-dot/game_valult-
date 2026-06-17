@@ -11,6 +11,7 @@ game-vault/
 ├── docs/                   # Documentación modular
 └── app/                    # Código de la aplicación
     ├── index.html          # Edición principal Cyberpunk 2077
+    ├── audio/              # Música de fondo (ver spec § Audio)
     ├── css/
     ├── js/
     └── editions/
@@ -35,8 +36,24 @@ Abre **`app/index.html`** en el navegador — edición principal **Cyberpunk 207
 | Viewport | Comportamiento |
 |---|---|
 | **≥ 1100px** | Galería y ficha en dos columnas a **igual altura**; scroll independiente en cada panel |
-| **&lt; 1100px** | Ficha como **panel deslizante** (overlay inferior); sin scroll al final de la página |
-| **≤ 520px** | Mobile-first: fichas apiladas, carátulas centradas |
+| **521–1099px** | Ficha como **panel deslizante** (overlay inferior); sin scroll al final de la página |
+| **≤ 520px** | Mobile-first: fichas apiladas, carátulas centradas, formulario y buscador a ancho completo |
+
+Ver criterios completos en [spec.md § Mobile-first](./spec.md#8-mobile-first-dispositivos-móviles).
+
+## Música de fondo
+
+La edición principal incluye música ambiental **"Horizon of the Unknown"** (SoundFlakes, CC BY 4.0).
+
+1. Copia el archivo a:
+   ```text
+   app/audio/Soundflakes - Horizon of the Unknown.mp3
+   ```
+2. Abre `app/index.html` — verás la **pantalla de entrada** (splash).
+3. Pulsa **ENTER GAME VAULT** para entrar; la música arranca automáticamente en bucle.
+4. Usa el botón flotante **🔊 / 🔇** (esquina inferior derecha) para silenciar o reanudar.
+
+Protocolo completo, licencia y criterios: [spec.md § Audio de fondo](./spec.md#10-audio-de-fondo).
 
 ## Tecnologías
 

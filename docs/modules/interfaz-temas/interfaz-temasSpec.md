@@ -17,11 +17,35 @@ Estética **Cyberpunk 2077**:
 
 ### Layout galería + ficha
 
+Enfoque **mobile-first**: los estilos base en `vault.css` apuntan a una sola columna; los media queries con `min-width` añaden el layout de dos columnas en desktop.
+
 | Viewport | Comportamiento |
 |---|---|
 | **≥ 1100px** | `.layout-ranking` en 2 columnas iguales; `.panel-list` y `.panel-detalle` misma altura (`calc(100vh - 14rem)`); scroll interno en cada panel |
-| **521–1099px** | Una columna; ficha en drawer fijo inferior al seleccionar |
-| **≤ 520px** | Fichas apiladas; carátulas 16:9 centradas |
+| **521–1099px** | Una columna; ficha en drawer fijo inferior al seleccionar; `body.detalle-abierto` bloquea scroll de fondo |
+| **≤ 520px** | Fichas apiladas; carátulas 16:9 centradas; formulario y buscador a ancho completo; safe area (`env(safe-area-inset-*)`) |
+
+### Formulario y navegación móvil
+
+- `.field-row` pasa a una columna en ≤ 520px.
+- `.panel-head` apila título y buscador en ≤ 520px.
+- Botones y enlaces del footer: altura táctil mínima 44px en ≤ 1099px.
+- `prefers-reduced-motion`: desactiva glitch, orbes y animaciones decorativas.
+
+### HTML requerido
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+```
+
+### Audio de fondo y splash screen
+
+- Archivo: `app/audio/Soundflakes - Horizon of the Unknown.mp3`
+- **Splash** (`#splash-screen`): pantalla de entrada al cargar; botón `#splash-enter` → **ENTER GAME VAULT**
+- Al entrar: splash desaparece, música en bucle, visible `#music-toggle`
+- Control posterior: botón flotante 🔊 / 🔇
+- Estilos: `.splash-screen`, `.splash-enter-btn`, `.music-toggle`, `.audio-credit` en `vault.css`
+- Spec global: [spec.md §10](../../spec.md#10-audio-de-fondo)
 
 ### Fichas del listado (`.card`)
 
@@ -61,7 +85,11 @@ Solo CRUD + filtro; sin panel ficha en ediciones legacy.
 - [x] Hover no tapa nombre del juego.
 - [x] Galería y ficha a igual altura en desktop.
 - [x] Overlay de ficha en tablet sin scroll al pie.
-- [x] Responsive desde 320px.
+- [x] Responsive desde 320px sin scroll horizontal.
+- [x] Formulario y ranking usables en pantalla táctil (targets ≥ 44px).
+- [x] Viewport meta con `viewport-fit=cover` para dispositivos con notch.
+- [x] Splash de entrada con **ENTER GAME VAULT**; música al entrar.
+- [x] Botón flotante 🔊 / 🔇 tras el splash.
 
 ## 6. Implementación
 

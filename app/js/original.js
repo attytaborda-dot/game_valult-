@@ -175,14 +175,31 @@ function leerFormulario() {
   const genero        = getVal('genero');
   const modalidad     = getVal('modalidad');
   const desarrollador = getVal('desarrollador');
-  const anio          = parseInt(getVal('anio'));
-  const puntuacion    = parseFloat(getVal('puntuacion'));
+  const anioRaw       = getVal('anio');
+  const puntuacionRaw = getVal('puntuacion');
   const verificado    = document.getElementById('verificado').checked;
 
-  if (!nombre || !consola || !genero || !modalidad || !desarrollador || !anio) {
-    msg('■ ERROR: COMPLETA TODOS LOS CAMPOS', 'error');
+  if (!nombre) { msg('■ ERROR: NOMBRE OBLIGATORIO', 'error'); return null; }
+  if (!consola) { msg('■ ERROR: SELECCIONA PLATAFORMA', 'error'); return null; }
+  if (!genero) { msg('■ ERROR: SELECCIONA GÉNERO', 'error'); return null; }
+  if (!modalidad) { msg('■ ERROR: SELECCIONA MODALIDAD', 'error'); return null; }
+  if (!desarrollador) { msg('■ ERROR: DESARROLLADOR OBLIGATORIO', 'error'); return null; }
+
+  const anio = parseInt(anioRaw, 10);
+  if (!anioRaw || !Number.isInteger(anio) || anio < 1980 || anio > 2030) {
+    msg('■ ERROR: AÑO ENTRE 1980 Y 2030', 'error');
     return null;
   }
+
+  let puntuacion = null;
+  if (puntuacionRaw) {
+    puntuacion = parseFloat(puntuacionRaw);
+    if (!Number.isFinite(puntuacion) || puntuacion < 1 || puntuacion > 10) {
+      msg('■ ERROR: PUNTUACIÓN ENTRE 1 Y 10', 'error');
+      return null;
+    }
+  }
+
   return { nombre, consola, genero, modalidad, desarrollador, 'año_lanzamiento': anio, puntuacion, verificado };
 }
 

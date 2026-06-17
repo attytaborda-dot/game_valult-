@@ -63,6 +63,10 @@ Datos (Supabase REST + localStorage)
 | `#detalle-backdrop` | Fondo oscuro al abrir ficha en vista apilada |
 | `#detalle-cerrar` | Cierra overlay (también Escape y clic en backdrop) |
 | `.layout-ranking` | Contenedor galería + ficha |
+| `#splash-screen` | Pantalla de entrada (splash) al cargar |
+| `#splash-enter` | Botón ENTER GAME VAULT — inicia música y muestra la app |
+| `#bg-music` | Audio de fondo en bucle |
+| `#music-toggle` | Botón flotante 🔊 / 🔇 |
 
 ## 6. Clases y funciones principales
 
