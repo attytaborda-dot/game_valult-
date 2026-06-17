@@ -6,7 +6,7 @@ const MEDIA_LS_KEY = 'gamevault_media';
 
 const CATALOGO_JUEGOS = {
   'animal crossing: new horizons': {
-    portada: 'https://cdn.cloudflare.steamstatic.com/steam/apps/1097150/header.jpg',
+    portada: 'https://static0.thegamerimages.com/wordpress/wp-content/uploads/2020/08/Animal-Crossing-New-Horizons.jpg?w=1600&h=900&fit=crop',
     enlace_compra: 'https://www.nintendo.com/us/store/products/animal-crossing-new-horizons-switch/',
     sinopsis: 'Tras llegar a una isla desierta, construyes tu comunidad ideal, decoras tu hogar y convives con vecinos antropomórficos en un ciclo relajado de días y estaciones.',
     comentarios: [
@@ -36,6 +36,7 @@ const CATALOGO_JUEGOS = {
     ],
   },
   "demon's souls": {
+    portada: 'https://wallpapercave.com/wp/wp12749681.jpg',
     enlace_compra: 'https://store.playstation.com/en-us/product/UP9000-PPSA01342_00-DEMONSSOULS00000',
     sinopsis: 'En el reino de Boletaria, un caballero debe atravesar fortalezas malditas y derrotar a demonios ancestrales en un RPG de acción implacable y atmosférico.',
     comentarios: [
@@ -45,6 +46,7 @@ const CATALOGO_JUEGOS = {
     ],
   },
   'metroid dread': {
+    portada: 'https://metroid.nintendo.com/dread/assets/images/media/videos/planet-zdr-dread-report-8-trailer.jpg',
     enlace_compra: 'https://www.nintendo.com/us/store/products/metroid-dread-switch/',
     sinopsis: 'Samus Aran investiga planetas alienígenas perseguida por máquinas letales E.M.M.I., combinando exploración, sigilo y comben en un thriller de ciencia ficción.',
     comentarios: [
@@ -104,6 +106,7 @@ const CATALOGO_JUEGOS = {
     ],
   },
   'pokemon scarlet & violet': {
+    portada: 'https://wallpapercave.com/wp/wp11250860.jpg',
     enlace_compra: 'https://www.nintendo.com/us/store/products/pokemon-scarlet-switch/',
     sinopsis: 'En Paldea estudias en la academia, recorres un mapa abierto en busca de tesoros legendarios y vives el camino hacia convertirte en campeón.',
     comentarios: [
@@ -113,7 +116,7 @@ const CATALOGO_JUEGOS = {
     ],
   },
   'the legend of zelda: tears of the kingdom': {
-    portada: 'https://uvejuegos.com/img/caratulas/62979/peque_The-Legend-of-Zelda-Tears-of-the-Kingdom.jpg',
+    portada: 'https://wallpapercave.com/wp/wp12278132.jpg',
     enlace_compra: 'https://www.nintendo.com/us/store/products/the-legend-of-zelda-tears-of-the-kingdom-switch/',
     sinopsis: 'Link despierta tras el cataclismo y debe reunir fragmentos de Hyrule flotante usando nuevas habilidades de ultrahand y fusión para salvar el reino.',
     comentarios: [
@@ -133,6 +136,7 @@ const CATALOGO_JUEGOS = {
     ],
   },
   "marvel's spider-man 2": {
+    ortada: 'https://mcdn.wallpapersafari.com/medium/64/85/9uBS4g.jpg',
     enlace_compra: 'https://store.playstation.com/en-us/concept/10002456',
     sinopsis: 'Peter Parker y Miles Morales protegen Nueva York del simbionte Venom y nuevas amenazas en un blockbuster de acción con dos héroes intercambiables.',
     comentarios: [
@@ -182,6 +186,7 @@ const CATALOGO_JUEGOS = {
     ],
   },
   'astro bot': {
+    portada: 'https://wallpapercg.com/media/ts_orig/27032.webp',
     enlace_compra: 'https://store.playstation.com/en-us/concept/10003923',
     sinopsis: 'Astro lidera una misión de rescate galáctica en un platform 3D lleno de referencias al catálogo PlayStation y mecánicas creativas.',
     comentarios: [
@@ -201,6 +206,7 @@ const CATALOGO_JUEGOS = {
     ],
   },
   'final fantasy vii rebirth': {
+    portada: 'https://cdn.mos.cms.futurecdn.net/cCxRTVWPFoGwxy8aEaAg5T-768-80.jpg.webp',
     enlace_compra: 'https://store.playstation.com/en-us/concept/10002684',
     sinopsis: 'Cloud y sus aliados abandonan Midgar para explorar un mundo abierto y enfrentar el legado de Sephiroth en la segunda parte del remake de FFVII.',
     comentarios: [
