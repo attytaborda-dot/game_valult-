@@ -30,6 +30,8 @@ class ListaJuegos {
     this.juegos           = [];
     this.filtroTxt        = '';
     this.seleccionadoId   = null;
+    this.rawgState        = null;
+    this._rawgToken       = 0;
   }
 
   async recuperar() {
@@ -184,7 +186,6 @@ class ListaJuegos {
     wrap.classList.add('is-open');
     const portada = escHtml(portadaDe(j));
     const compra  = escHtml(enlaceCompraDe(j));
-    const coms    = comentariosDe(j);
     const horas   = formatearHoras(horasPromedioDe(j));
 
     panel.innerHTML = `
@@ -198,7 +199,7 @@ class ListaJuegos {
           <div class="detalle-tags">
             <span>${escHtml(j.consola)}</span>
             <span>${escHtml(j.genero)}</span>
-            <span>★ ${j.puntuacion ?? '—'}</span>
+            <span id="detalle-puntuacion-rawg">★ …</span>
             <span class="tag-horas">⏱ ${horas}</span>
             <span class="${j.verificado ? 'tag-ok' : 'tag-pend'}">${j.verificado ? 'Verificado' : 'Pendiente'}</span>
           </div>
@@ -209,19 +210,152 @@ class ListaJuegos {
         </div>
       </div>
       <section class="comunidad">
-        <h3 class="detalle-sub">Comunidad — 3 opiniones</h3>
-        <div class="comentarios-list">
-          ${coms.map(c => `
-            <article class="comentario">
-              <header class="comentario-head">
-                <span class="comentario-autor">${escHtml(c.autor)}</span>
-              </header>
-              <p class="comentario-texto">${escHtml(c.texto)}</p>
-            </article>
-          `).join('')}
+        <h3 class="detalle-sub">Comunidad — <span id="comunidad-count" class="comunidad-count">cargando…</span></h3>
+        <div id="comentarios-rawg" class="comentarios-list" aria-live="polite">
+          <p class="comentarios-estado">Cargando opiniones desde RAWG…</p>
+        </div>
+        <div class="comentarios-actions">
+          <button type="button" id="btn-mas-opiniones" class="btn btn-mas-opiniones" hidden>Ver más opiniones</button>
+          <p id="comentarios-fin" class="comentarios-fin" hidden>Sin más opiniones disponibles</p>
         </div>
       </section>`;
+    this._rawgToken += 1;
+    this.rawgState = null;
+    this.vincularOpinionesRawg();
+    this.cargarOpinionesRawg(j);
     this.actualizarVistaDetalle();
+  }
+
+  actualizarPuntuacionDetalle(rawgGame, token) {
+    if (token != null && token !== this._rawgToken) return;
+    const el = document.getElementById('detalle-puntuacion-rawg');
+    if (!el) return;
+    const valor = rawgGame ? formatearPuntuacionRawg(rawgGame) : 'N/A';
+    el.textContent = `★ ${valor}`;
+  }
+
+  renderComentarioHTML(c) {
+    const rating = c.rating != null
+      ? `<span class="comentario-rating">★ ${escHtml(String(c.rating))}/5</span>`
+      : '';
+    return `
+      <article class="comentario">
+        <header class="comentario-head">
+          <span class="comentario-autor">${escHtml(c.autor)}</span>
+          ${rating}
+        </header>
+        <p class="comentario-texto">${escHtml(c.texto)}</p>
+      </article>`;
+  }
+
+  actualizarControlesOpiniones() {
+    const btnMore = document.getElementById('btn-mas-opiniones');
+    const finMsg = document.getElementById('comentarios-fin');
+    const hasMore = Boolean(this.rawgState?.hasMore);
+    if (btnMore) btnMore.hidden = !hasMore;
+    if (finMsg) {
+      finMsg.hidden = hasMore;
+      if (!hasMore) finMsg.textContent = 'Sin más opiniones disponibles';
+    }
+  }
+
+  vincularOpinionesRawg() {
+    const btn = document.getElementById('btn-mas-opiniones');
+    if (!btn || btn.dataset.bound) return;
+    btn.dataset.bound = '1';
+    btn.addEventListener('click', () => {
+      const j = this.juegos.find(x => x.id === this.seleccionadoId);
+      if (j) this.cargarOpinionesRawg(j, { append: true });
+    });
+  }
+
+  async cargarOpinionesRawg(juego, { append = false } = {}) {
+    const token = ++this._rawgToken;
+    const container = document.getElementById('comentarios-rawg');
+    const btnMore = document.getElementById('btn-mas-opiniones');
+    const finMsg = document.getElementById('comentarios-fin');
+    const countEl = document.getElementById('comunidad-count');
+    if (!container) return;
+
+    if (!append) {
+      container.innerHTML = '<p class="comentarios-estado">Cargando opiniones desde RAWG…</p>';
+      if (btnMore) btnMore.hidden = true;
+      if (finMsg) finMsg.hidden = true;
+      this.rawgState = { gameId: null, page: 0, hasMore: false, total: 0, shown: 0 };
+    } else if (btnMore) {
+      btnMore.disabled = true;
+      btnMore.textContent = 'Cargando…';
+    }
+
+    try {
+      if (!this.rawgState?.gameId) {
+        const found = await buscarJuegoRawg(juego.nombre);
+        if (token !== this._rawgToken) return;
+        if (!found) {
+          this.actualizarPuntuacionDetalle(null, token);
+          container.innerHTML = '<p class="comentarios-estado">No se encontraron opiniones en RAWG para este juego.</p>';
+          if (countEl) countEl.textContent = '0 opiniones';
+          if (finMsg) {
+            finMsg.hidden = false;
+            finMsg.textContent = 'Sin más opiniones disponibles';
+          }
+          return;
+        }
+        this.actualizarPuntuacionDetalle(found, token);
+        this.rawgState = {
+          gameId: found.id,
+          page: 0,
+          hasMore: true,
+          total: found.reviewsCount,
+          shown: 0,
+          gameName: found.name,
+        };
+      }
+
+      const nextPage = (this.rawgState.page || 0) + 1;
+      const { count, next, results } = await obtenerReviewsRawg(
+        this.rawgState.gameId,
+        nextPage,
+        RAWG_PAGE_SIZE
+      );
+      if (token !== this._rawgToken) return;
+
+      this.rawgState.page = nextPage;
+      this.rawgState.total = count;
+      this.rawgState.hasMore = Boolean(next) && results.length > 0;
+      this.rawgState.shown = (this.rawgState.shown || 0) + results.length;
+
+      if (!append && !results.length) {
+        container.innerHTML = '<p class="comentarios-estado">RAWG no tiene opiniones de texto para este juego.</p>';
+        if (countEl) countEl.textContent = '0 opiniones';
+        this.rawgState.hasMore = false;
+        this.actualizarControlesOpiniones();
+        return;
+      }
+
+      const html = results.map(c => this.renderComentarioHTML(c)).join('');
+      if (append) container.insertAdjacentHTML('beforeend', html);
+      else container.innerHTML = html;
+
+      if (countEl) {
+        countEl.textContent = `${this.rawgState.shown} ${this.rawgState.shown === 1 ? 'opinión' : 'opiniones'}`;
+      }
+      this.actualizarControlesOpiniones();
+    } catch (err) {
+      if (token !== this._rawgToken) return;
+      console.error('RAWG reviews:', err);
+      if (!append) {
+        this.actualizarPuntuacionDetalle(null, token);
+        container.innerHTML = '<p class="comentarios-estado comentarios-error">No se pudieron cargar las opiniones. Inténtalo de nuevo.</p>';
+        if (countEl) countEl.textContent = 'error';
+      }
+    } finally {
+      if (token !== this._rawgToken) return;
+      if (btnMore) {
+        btnMore.disabled = false;
+        btnMore.textContent = 'Ver más opiniones';
+      }
+    }
   }
 
   mostrar() {

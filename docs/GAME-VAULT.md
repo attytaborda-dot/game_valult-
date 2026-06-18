@@ -1,15 +1,15 @@
-# Documentación consolidada — GAME VAULT
+# Documentación consolidada ��� GAME VAULT
 
 La documentación del proyecto está **separada por módulos** para facilitar el mantenimiento.
 
-## Índice
+## ��ndice
 
 | Documento | Descripción |
 |---|---|
 | [README.md](../README.md) | Inicio rápido y estructura del repositorio |
 | [spec.md](../spec.md) | Especificación general y criterios de aceptación |
 | [database.md](./database.md) | Supabase + media local (`horas_promedio`, portada, enlace) |
-| [architecture.md](./architecture.md) | Capas, layout responsive, funciones clave |
+| [architecture.md](./architecture.md) | Capas, layout responsive, RAWG, funciones clave |
 
 ## Código de la aplicación
 

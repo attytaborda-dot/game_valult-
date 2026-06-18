@@ -15,11 +15,13 @@ Marcar juegos como verificados y mostrar ranking por `puntuacion`, con datos bá
 
 ### Ranking
 
-- Orden descendente por `puntuacion`.
+- Orden descendente por `puntuacion` de **Supabase** (solo orden del listado).
 - Badge `#1`, `#2`… en carátula del listado.
-- Sin puntuación al final del ranking.
+- Sin puntuación en Supabase → al final del ranking.
 - Filtro aplicado antes de ordenar.
-- Etiqueta `⏱ ~N h` en cada ficha (horas promedio).
+- Etiqueta `⏱ ~N h` en cada ficha del listado (horas promedio).
+- Etiqueta `★` en listado: valor de Supabase (`j.puntuacion`).
+- En **ficha detalle**, la puntuación mostrada es de **RAWG** en tiempo real (ver [comunidad-fichas](../comunidad-fichas/comunidad-fichasSpec.md)).
 
 ### Galería desktop
 

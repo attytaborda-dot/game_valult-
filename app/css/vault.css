@@ -796,7 +796,19 @@ body.vault-edition.cyberpunk-edition {
   backdrop-filter: blur(4px);
 }
 
-body.detalle-abierto { overflow: hidden; }
+body.detalle-abierto {
+  overflow: hidden;
+}
+
+/* El footer es hermano de main con el mismo z-index; en overlay queda encima del drawer */
+body.detalle-abierto .layout-main {
+  z-index: 250;
+}
+
+body.detalle-abierto .site-footer {
+  visibility: hidden;
+  pointer-events: none;
+}
 
 .panel-detalle {
   display: flex;
@@ -1012,7 +1024,54 @@ body.detalle-abierto { overflow: hidden; }
 .detalle-sinopsis { font-size: 1.1rem; line-height: 1.65; color: var(--text); }
 
 .comunidad { margin-top: 0.5rem; }
+.comunidad-count { color: var(--neon-cyan); }
 .comentarios-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.comentarios-estado {
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 1rem;
+  border: 1px dashed var(--border);
+  background: var(--void);
+}
+
+.comentarios-error { color: var(--neon-mag); border-color: var(--neon-mag); }
+
+.comentarios-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.btn-mas-opiniones {
+  background: var(--void);
+  color: var(--neon-cyan);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.15);
+  min-width: min(100%, 280px);
+}
+
+.btn-mas-opiniones:hover:not(:disabled) {
+  background: var(--panel-2);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.35);
+  transform: scale(1.03);
+}
+
+.btn-mas-opiniones:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.comentarios-fin {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
 
 .comentario {
   padding: 0.85rem 1rem;
@@ -1032,6 +1091,21 @@ body.detalle-abierto { overflow: hidden; }
   font-weight: 700;
   color: var(--neon-green);
   text-shadow: 0 0 8px rgba(0, 255, 136, 0.3);
+}
+
+.comentario-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.comentario-rating {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--neon-yellow);
+  letter-spacing: 0.04em;
 }
 
 .comentario-texto {

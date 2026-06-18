@@ -2,7 +2,7 @@
 
 ## 1. Objetivo general
 
-Gestionar y **verificar** un catálogo de videojuegos en Supabase, con **ranking por puntuación**, **ficha detallada** al seleccionar un juego, **sinopsis**, **feedback comunitario** (3 comentarios) y **horas promedio de completado** visibles en el listado.
+Gestionar y **verificar** un catálogo de videojuegos en Supabase, con **ranking por puntuación** (orden desde Supabase), **ficha detallada** al seleccionar un juego, **sinopsis**, **opiniones RAWG** en tiempo real y **horas promedio de completado** visibles en el listado.
 
 ## 2. Alcance funcional
 
@@ -10,8 +10,8 @@ Gestionar y **verificar** un catálogo de videojuegos en Supabase, con **ranking
 - Marcar registros como verificados.
 - Filtrar por texto.
 - Estadísticas en header (total y verificados).
-- Ranking ordenado por `puntuacion`.
-- Panel de ficha con carátula ajustada, sinopsis, horas y comentarios.
+- Ranking ordenado por `puntuacion` de Supabase (solo orden del listado).
+- Panel de ficha con carátula ajustada, sinopsis, **puntuación RAWG** (solo visualización) y opiniones RAWG.
 - **Horas promedio** visibles en cada ficha del ranking (sin expandir).
 - Carátulas, enlaces de compra y horas (localStorage + catálogo).
 - Layout **mobile-first** con overlay de ficha en tablet/móvil.
@@ -53,7 +53,8 @@ Gestionar y **verificar** un catálogo de videojuegos en Supabase, con **ranking
 
 - [x] Carga 21 juegos únicos.
 - [x] CRUD operativo.
-- [x] Clic en ficha abre detalle con sinopsis y 3 comentarios.
+- [x] Clic en ficha abre detalle con sinopsis y opiniones RAWG (mín. 5, paginación).
+- [x] Puntuación en ficha detalle desde RAWG (no modifica Supabase).
 - [x] Horas promedio visibles en listado sin expandir ficha.
 - [x] Desktop: galería y panel detalle a igual altura.
 - [x] Tablet/móvil: ficha en overlay sin scroll al pie de página.
@@ -69,7 +70,7 @@ La edición principal (`app/index.html`) debe ser usable desde **320px** de anch
 - Estilos base para móvil; breakpoints con `min-width` solo para ampliar en tablet y desktop.
 - Meta viewport en HTML: `width=device-width, initial-scale=1.0, viewport-fit=cover`.
 - Formulario en una columna en viewports ≤ 520px.
-- Ficha de detalle en **drawer inferior** (≤ 1099px) con backdrop y botón cerrar; `body` sin scroll de fondo al abrir.
+- Ficha de detalle en **drawer inferior** (≤ 1099px) con backdrop y botón cerrar; `body` sin scroll de fondo al abrir; footer y navegación de ediciones ocultos mientras el overlay está activo.
 - Áreas táctiles mínimas de **44px** en botones y navegación en vista apilada.
 
 ### Breakpoints
@@ -101,6 +102,40 @@ La edición principal (`app/index.html`) debe ser usable desde **320px** de anch
 - [x] CSS con cache bust (`vault.css?v=N`) tras cambios de layout.
 
 Especificación detallada de interfaz: [interfaz-temasSpec.md](./docs/modules/interfaz-temas/interfaz-temasSpec.md).
+
+## 9. Integración RAWG API
+
+La edición principal consume [RAWG.io](https://rawg.io/apidocs) en tiempo real para **puntuación** y **opiniones** en la ficha de detalle. Los datos de Supabase **no se modifican**.
+
+### Archivos
+
+| Archivo | Rol |
+|---|---|
+| `app/js/rawg.js` | Búsqueda por nombre, reviews paginadas, cálculo de puntuación |
+| `app/js/app.js` | `renderDetalle`, `cargarOpinionesRawg`, `actualizarPuntuacionDetalle` |
+
+### Puntuación en ficha (`#detalle-puntuacion-rawg`)
+
+1. Al abrir la ficha se busca el juego: `GET /api/games?search=NOMBRE`.
+2. Cálculo (solo pantalla):
+   - `metacritic` disponible → `(metacritic / 10).toFixed(1)` (escala 1–10).
+   - Si no → `rating` RAWG (0–5) × 2 → `.toFixed(1)`.
+   - Si ninguno → `"N/A"`.
+3. Mientras carga se muestra `★ …`; mismo estilo visual que el tag de puntuación del listado.
+4. El listado y el orden del ranking siguen usando `puntuacion` de Supabase.
+
+### Opiniones en ficha
+
+- 5 reviews iniciales por página; botón **Ver más opiniones** carga la siguiente página sin recargar.
+- Si no hay más: mensaje **Sin más opiniones disponibles**.
+- Fuente: `GET /api/games/{id}/reviews`.
+
+### Criterios de aceptación RAWG
+
+- [x] Puntuación en detalle desde RAWG; Supabase intacto.
+- [x] Opiniones dinámicas con paginación.
+- [x] Caché en memoria del ID RAWG por nombre (compartida entre puntuación y reviews).
+- [x] Estilo Cyberpunk en comentarios y botón «Ver más».
 
 ## 10. Audio de fondo
 
